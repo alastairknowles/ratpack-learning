@@ -1,9 +1,7 @@
-package real.al.knowles.ratpack.learning.blocking;
+package real.al.knowles.ratpack.learning.nonblocking;
 
-import ratpack.handling.Context;
+public interface NonBlockingController {
 
-public interface BlockingController {
-
-    void get(Context context);
+    String get();
 
 }

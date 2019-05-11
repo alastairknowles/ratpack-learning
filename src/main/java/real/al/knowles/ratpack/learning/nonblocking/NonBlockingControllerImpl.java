@@ -1,20 +1,19 @@
-package real.al.knowles.ratpack.learning.blocking;
+package real.al.knowles.ratpack.learning.nonblocking;
 
 import com.google.inject.Inject;
-import ratpack.handling.Context;
 
-public class BlockingControllerImpl implements BlockingController {
+public class NonBlockingControllerImpl implements NonBlockingController {
 
-    private final BlockingService blockingService;
+    private final NonBlockingService nonBlockingService;
 
     @Inject
-    public BlockingControllerImpl(BlockingService blockingService) {
-        this.blockingService = blockingService;
+    public NonBlockingControllerImpl(NonBlockingService nonBlockingService) {
+        this.nonBlockingService = nonBlockingService;
     }
 
     @Override
-    public void get(Context context) {
-        blockingService.render(context);
+    public String get() {
+        return nonBlockingService.render();
     }
 
 }
