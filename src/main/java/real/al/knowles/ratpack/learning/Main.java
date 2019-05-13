@@ -2,8 +2,8 @@ package real.al.knowles.ratpack.learning;
 
 import ratpack.guice.Guice;
 import ratpack.server.RatpackServer;
-import real.al.knowles.ratpack.learning.blocking.BlockingController;
-import real.al.knowles.ratpack.learning.nonblocking.NonBlockingController;
+import real.al.knowles.ratpack.learning.blocking.BlockingChain;
+import real.al.knowles.ratpack.learning.nonblocking.NonBlockingChain;
 
 public class Main {
 
@@ -13,10 +13,8 @@ public class Main {
                         binding.module(DependencyModule.class)))
                 .handlers(chain -> chain
                         .get(context -> context.render("homepage"))
-                        .get("blocking", context ->
-                                context.get(BlockingController.class).get(context))
-                        .get("non-blocking", context ->
-                                context.render(context.get(NonBlockingController.class).get()))));
+                        .prefix("blocking", BlockingChain.class)
+                        .prefix("non-blocking", NonBlockingChain.class)));
     }
 
 }
