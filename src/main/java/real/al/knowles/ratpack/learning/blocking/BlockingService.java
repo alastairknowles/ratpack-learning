@@ -1,9 +1,15 @@
 package real.al.knowles.ratpack.learning.blocking;
 
-import ratpack.handling.Context;
+import ratpack.handling.Handler;
 
-public interface BlockingService {
+import static ratpack.exec.Blocking.get;
 
-    void render(Context context);
+public class BlockingService {
+
+    Handler render() {
+        return (context ->
+                get(() -> "blocking page")
+                        .then(context::render));
+    }
 
 }

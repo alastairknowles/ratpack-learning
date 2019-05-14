@@ -1,7 +1,11 @@
 package real.al.knowles.ratpack.learning.nonblocking;
 
-public interface NonBlockingService {
+import ratpack.handling.Handler;
 
-    String render();
+public class NonBlockingService {
+
+    Handler render() {
+        return (context -> context.render("non blocking page"));
+    }
 
 }
