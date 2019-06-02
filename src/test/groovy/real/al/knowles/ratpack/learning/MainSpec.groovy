@@ -12,7 +12,7 @@ class MainSpec extends Specification {
 
     @Shared
     @AutoCleanup
-    MainClassApplicationUnderTest applicationUnderTest = new MainClassApplicationUnderTest(Main.class)
+    private MainClassApplicationUnderTest applicationUnderTest = new MainClassApplicationUnderTest(Main.class)
 
     @Test
     def 'homepage'() {
