@@ -1,28 +1,30 @@
 package real.al.knowles.ratpack.learning.helloworld
 
+import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
 import ratpack.test.exec.ExecHarness
-import spock.lang.Shared
-import spock.lang.Specification
 
-class HelloServiceSpec extends Specification {
+import static org.junit.Assert.assertEquals
 
-    @Shared
-    private HelloService helloService
+@RunWith(MockitoJUnitRunner)
+class WorldServiceSpec {
 
-    void setupSpec() {
-        helloService = new HelloService()
+    private WorldService worldService
+
+    @Before
+    void setUp() {
+        worldService = new WorldService()
     }
 
     @Test
-    def "hello world - success"() {
-        when: "calling the method"
+    void sayWorld_success() {
         def result = ExecHarness.yieldSingle({
-            helloService.sayHello()
+            worldService.sayWorld()
         })
 
-        then: "the method yields 'hello'"
-        result.value == 'hello'
+        assertEquals('world', result.value)
     }
 
 }

@@ -1,11 +1,11 @@
-package real.al.knowles.ratpack.learning.hello;
+package real.al.knowles.ratpack.learning.helloworld;
 
 import ratpack.exec.Promise;
 
-public class HelloService {
+public class WorldService {
 
-    Promise<String> sayHello() {
-        return Promise.async(upstream -> upstream.success("hello"));
+    Promise<String> sayWorld() {
+        return Promise.async(upstream -> upstream.success("world"));
     }
 
 }

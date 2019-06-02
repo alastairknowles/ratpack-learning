@@ -1,4 +1,4 @@
-package real.al.knowles.ratpack.learning.hello;
+package real.al.knowles.ratpack.learning.helloworld;
 
 import ratpack.exec.Promise;
 

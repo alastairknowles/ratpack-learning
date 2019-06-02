@@ -5,7 +5,7 @@ import ratpack.handling.Handler;
 public class NonBlockingService {
 
     Handler render() {
-        return (context -> context.render("non blocking page"));
+        return (context -> context.render("non blocking"));
     }
 
 }

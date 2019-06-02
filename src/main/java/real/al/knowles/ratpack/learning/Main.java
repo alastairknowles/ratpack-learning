@@ -1,6 +1,7 @@
 package real.al.knowles.ratpack.learning;
 
 import real.al.knowles.ratpack.learning.blocking.BlockingChain;
+import real.al.knowles.ratpack.learning.helloworld.HelloWorldChain;
 import real.al.knowles.ratpack.learning.nonblocking.NonBlockingChain;
 
 import static ratpack.guice.Guice.registry;
@@ -14,8 +15,9 @@ public class Main {
                         binding.module(Configuration.class)))
                 .handlers(chain -> chain
                         .get(context -> context.render("homepage"))
-                        .prefix("blocking", BlockingChain.class)
-                        .prefix("non-blocking", NonBlockingChain.class)));
+                        .insert(BlockingChain.class)
+                        .insert(NonBlockingChain.class)
+                        .insert(HelloWorldChain.class)));
     }
 
 }

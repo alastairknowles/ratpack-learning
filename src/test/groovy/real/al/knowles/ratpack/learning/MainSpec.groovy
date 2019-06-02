@@ -16,7 +16,7 @@ class MainSpec extends Specification {
 
     @Test
     def 'homepage'() {
-        when: 'Home page is requested'
+        when: 'home page is requested'
         String response = applicationUnderTest.httpClient.get().getBody().getText(UTF_8)
 
         then: 'Home page message is returned'
@@ -25,20 +25,29 @@ class MainSpec extends Specification {
 
     @Test
     def 'blocking'() {
-        when: 'Blocking page is requested'
+        when: 'blocking page is requested'
         String response = applicationUnderTest.httpClient.get('blocking').getBody().getText(UTF_8)
 
-        then: 'Blocking page message is returned'
-        response == 'blocking page'
+        then: 'blocking message is returned'
+        response == 'blocking'
     }
 
     @Test
     def 'non-blocking'() {
-        when: 'Non blocking page is requested'
+        when: 'non blocking page is requested'
         String response = applicationUnderTest.httpClient.get('non-blocking').getBody().getText(UTF_8)
 
-        then: 'Non blocking page message is returned'
-        response == 'non blocking page'
+        then: 'non blocking message is returned'
+        response == 'non blocking'
+    }
+
+    @Test
+    def 'hello world'() {
+        when: 'hello world page is requested'
+        String response = applicationUnderTest.httpClient.get('hello-world').getBody().getText(UTF_8)
+
+        then: 'hello world message is returned'
+        response == 'hello world'
     }
 
 }

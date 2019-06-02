@@ -8,7 +8,7 @@ public class BlockingService {
 
     Handler render() {
         return (context ->
-                get(() -> "blocking page")
+                get(() -> "blocking")
                         .then(context::render));
     }
 

@@ -15,7 +15,7 @@ public class BlockingChain implements Action<Chain> {
 
     @Override
     public void execute(Chain chain) {
-        chain.get(blockingService.render());
+        chain.get("blocking", blockingService.render());
     }
 
 }
