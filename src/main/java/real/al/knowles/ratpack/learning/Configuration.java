@@ -8,11 +8,11 @@ import real.al.knowles.ratpack.learning.blocking.BlockingService;
 import real.al.knowles.ratpack.learning.helloworld.HelloService;
 import real.al.knowles.ratpack.learning.helloworld.HelloWorldChain;
 import real.al.knowles.ratpack.learning.helloworld.HelloWorldService;
+import real.al.knowles.ratpack.learning.helloworld.WorldService;
 import real.al.knowles.ratpack.learning.metric.LoggerService;
 import real.al.knowles.ratpack.learning.metric.MetricService;
 import real.al.knowles.ratpack.learning.nonblocking.NonBlockingChain;
 import real.al.knowles.ratpack.learning.nonblocking.NonBlockingService;
-import real.al.knowles.ratpack.learning.helloworld.WorldService;
 
 public class Configuration extends AbstractModule {
 
@@ -31,12 +31,6 @@ public class Configuration extends AbstractModule {
     @Singleton
     public BlockingChain blockingChain(BlockingService blockingService) {
         return new BlockingChain(blockingService);
-    }
-
-    @Provides
-    @Singleton
-    public HelloWorldChain helloWorldChain(HelloWorldService helloWorldService) {
-        return new HelloWorldChain(helloWorldService);
     }
 
     @Provides
@@ -80,6 +74,12 @@ public class Configuration extends AbstractModule {
     public HelloWorldService helloWorldService(HelloService helloService, WorldService worldService,
                                                MetricService metricService) {
         return new HelloWorldService(helloService, worldService, metricService);
+    }
+
+    @Provides
+    @Singleton
+    public HelloWorldChain helloWorldChain(HelloWorldService helloWorldService) {
+        return new HelloWorldChain(helloWorldService);
     }
 
 }
