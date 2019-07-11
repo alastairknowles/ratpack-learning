@@ -92,6 +92,7 @@ task queryDsl() {
 
         dataSource.connection.with {
             Connection connection ->
+                //noinspection GroovyAssignabilityCheck
                 def configuration = new com.querydsl.sql.Configuration(MySQLTemplates.DEFAULT)
                 exporter.schemaPattern = 'testman'
                 exporter.packageName = 'real.al.knowles.ratpack.learning.schema'
