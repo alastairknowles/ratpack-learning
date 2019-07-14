@@ -29,11 +29,16 @@ repositories {
     mavenCentral()
 }
 
-def databaseHost = 'localhost'
-def databasePort = 3306
-def databaseName = 'testman'
-def databaseUser = 'testman'
-def databasePassword = 'testman'
+def databaseProperties = new Properties()
+file("src/main/resources/db/database.properties").withInputStream {
+    inputStream -> databaseProperties.load(inputStream)
+}
+
+def databaseDriver = databaseProperties.getProperty('database.driver')
+def databaseUrl = databaseProperties.getProperty('database.url')
+def databaseName = databaseProperties.getProperty('database.name')
+def databaseUser = databaseProperties.getProperty('database.user')
+def databasePassword = databaseProperties.getProperty('database.password')
 
 dependencies {
     compile group: 'io.ratpack', name: 'ratpack-core', version: '1.6.1'
@@ -67,7 +72,7 @@ test {
 }
 
 flyway {
-    url = 'jdbc:mysql://' + databaseHost + ':' + databasePort + '/' + databaseName
+    url = databaseUrl
     user = databaseUser
     password = databasePassword
     schemas = [databaseName]
@@ -81,11 +86,10 @@ task queryDsl() {
     outputs.upToDateWhen { false }
     doLast {
         MetaDataExporter exporter = new MetaDataExporter()
-        Class.forName('com.mysql.cj.jdbc.Driver').newInstance()
+        Class.forName(databaseDriver).newInstance()
 
         MysqlDataSource dataSource = new MysqlDataSource()
-        dataSource.setServerName(databaseHost)
-        dataSource.setPortNumber(databasePort)
+        dataSource.setUrl(databaseUrl)
         dataSource.setDatabaseName(databaseName)
         dataSource.setUser(databaseUser)
         dataSource.setPassword(databasePassword)
@@ -94,7 +98,7 @@ task queryDsl() {
             Connection connection ->
                 //noinspection GroovyAssignabilityCheck
                 def configuration = new com.querydsl.sql.Configuration(MySQLTemplates.DEFAULT)
-                exporter.schemaPattern = 'testman'
+                exporter.schemaPattern = databaseName
                 exporter.packageName = 'real.al.knowles.ratpack.learning.schema'
                 exporter.targetFolder = new File('src/main/java')
                 exporter.configuration = configuration
