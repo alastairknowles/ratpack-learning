@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.querydsl.sql.SQLQueryFactory;
+import real.al.knowles.ratpack.learning.database.TransactionWrapper;
 
 public class ProjectModule extends AbstractModule {
 
@@ -20,8 +21,8 @@ public class ProjectModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public ProjectService projectService(ProjectRepository projectRepository) {
-        return new ProjectService(projectRepository);
+    public ProjectService projectService(ProjectRepository projectRepository, TransactionWrapper transactionWrapper) {
+        return new ProjectService(projectRepository, transactionWrapper);
     }
 
     @Provides

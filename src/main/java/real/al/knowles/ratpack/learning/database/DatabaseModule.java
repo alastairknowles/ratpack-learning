@@ -7,9 +7,12 @@ import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.SQLQueryFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import ratpack.guice.ConfigurableModule;
-import ratpack.jdbctx.Transaction;
 
+import javax.inject.Provider;
 import javax.sql.DataSource;
+import java.sql.Connection;
+
+import static ratpack.jdbctx.Transaction.connection;
 
 public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
 
@@ -26,14 +29,26 @@ public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
         dataSource.setJdbcUrl(databaseProperties.getUrl());
         dataSource.setUsername(databaseProperties.getUser());
         dataSource.setPassword(databaseProperties.getPassword());
-        return Transaction.dataSource(dataSource);
+        dataSource.setAutoCommit(false);
+        return dataSource;
     }
 
     @Provides
     @Singleton
-    public SQLQueryFactory queryFactory(DataSource dataSource) {
+    public TransactionWrapper transactionWrapper(DataSource dataSource) {
+        return new TransactionWrapper(dataSource);
+    }
+
+    @Provides
+    @Singleton
+    public SQLQueryFactory queryFactory() {
         Configuration configuration = new Configuration(MySQLTemplates.DEFAULT);
-        return new SQLQueryFactory(configuration, dataSource);
+        return new SQLQueryFactory(configuration, connectionProvider());
+    }
+
+    private Provider<Connection> connectionProvider() {
+        return () -> connection()
+                .orElseThrow(() -> new DatabaseException("No active transaction"));
     }
 
 }
