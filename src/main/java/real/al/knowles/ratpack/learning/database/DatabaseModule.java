@@ -6,12 +6,16 @@ import com.querydsl.sql.Configuration;
 import com.querydsl.sql.MySQLTemplates;
 import com.querydsl.sql.SQLQueryFactory;
 import com.zaxxer.hikari.HikariDataSource;
+import net.jodah.failsafe.RetryPolicy;
+import ratpack.exec.Promise;
 import ratpack.guice.ConfigurableModule;
 
 import javax.inject.Provider;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
+import static java.time.Duration.ofMillis;
+import static java.time.Duration.ofSeconds;
 import static ratpack.jdbctx.Transaction.connection;
 
 public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
@@ -35,8 +39,20 @@ public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
 
     @Provides
     @Singleton
-    public TransactionWrapper transactionWrapper(DataSource dataSource) {
-        return new TransactionWrapper(dataSource);
+    public RetryPolicy<Promise> retryPolicy(DatabaseProperties databaseProperties) {
+        return new RetryPolicy<Promise>()
+                .withMaxAttempts(databaseProperties.getRetryCount())
+                .withDelay(ofSeconds(databaseProperties.getRetryIntervalSeconds()))
+                .withJitter(ofMillis(databaseProperties.getRetryJitterMillis()))
+                .onFailure(completedEvent -> {
+                    throw new DatabaseException("Operation failed", completedEvent.getFailure());
+                });
+    }
+
+    @Provides
+    @Singleton
+    public TransactionWrapper transactionWrapper(DataSource dataSource, RetryPolicy<Promise> retryPolicy) {
+        return new TransactionWrapper(dataSource, retryPolicy);
     }
 
     @Provides

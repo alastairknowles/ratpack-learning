@@ -17,12 +17,22 @@ public class DatabaseProperties {
 
     private String password;
 
+    private Integer retryCount;
+
+    private Long retryIntervalSeconds;
+
+    private Long retryJitterMillis;
+
     public static Action<DatabaseProperties> loadDatabaseProperties(ConfigData configData) {
         return databaseProperties -> {
             databaseProperties.setDriver(configData.get("/database/driver", String.class));
             databaseProperties.setUrl(configData.get("/database/url", String.class));
             databaseProperties.setUser(configData.get("/database/user", String.class));
             databaseProperties.setPassword(configData.get("/database/password", String.class));
+            databaseProperties.setRetryCount(configData.get("/database/retryCount", Integer.class));
+            databaseProperties.setRetryIntervalSeconds(
+                    configData.get("/database/retryIntervalSeconds", Long.class));
+            databaseProperties.setRetryJitterMillis(configData.get("/database/retryJitterMillis", Long.class));
         };
     }
 
