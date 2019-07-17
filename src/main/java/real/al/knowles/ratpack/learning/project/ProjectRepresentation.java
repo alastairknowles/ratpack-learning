@@ -1,6 +1,7 @@
 package real.al.knowles.ratpack.learning.project;
 
 import com.querydsl.core.Tuple;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -10,16 +11,16 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ProjectRepresentation extends AbstractRepresentation<ProjectRepresentation> {
 
-    private final Long id;
+    private Long id;
 
-    private final String externalId;
+    private String externalId;
 
-    private final LocalDateTime createdOn;
+    private LocalDateTime createdOn;
 
-    private final LocalDateTime updatedOn;
+    private LocalDateTime updatedOn;
 
     @Override
     public ProjectRepresentation fromRow(Tuple row) {

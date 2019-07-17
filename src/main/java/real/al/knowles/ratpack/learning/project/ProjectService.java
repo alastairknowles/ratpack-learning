@@ -6,8 +6,6 @@ import real.al.knowles.ratpack.learning.database.TransactionWrapper;
 
 import java.time.LocalDateTime;
 
-import static java.time.LocalDateTime.now;
-
 public class ProjectService {
 
     private final ProjectRepository projectRepository;
@@ -21,9 +19,16 @@ public class ProjectService {
     }
 
     public Promise<ProjectRepresentation> createProject(ProjectRepresentation projectRepresentation) {
-        LocalDateTime createdOn = now();
-        return Promise.value(
-                new ProjectRepresentation(1L, "externalId", createdOn, createdOn));
+        LocalDateTime now = LocalDateTime.now();
+        projectRepresentation.setCreatedOn(now);
+        projectRepresentation.setUpdatedOn(now);
+
+        return transactionWrapper.execute(
+                () -> projectRepository.createProject(projectRepresentation))
+                .map(id -> {
+                    projectRepresentation.setId(id);
+                    return projectRepresentation;
+                });
     }
 
 }
