@@ -5,6 +5,7 @@ import com.querydsl.sql.dml.SQLInsertClause;
 
 import javax.inject.Inject;
 import java.sql.Timestamp;
+import java.util.Optional;
 
 import static com.querydsl.core.types.Projections.constructor;
 import static real.al.knowles.ratpack.learning.schema.QProject.project;
@@ -26,12 +27,18 @@ public class ProjectRepository {
         return insert.executeWithKey(project.id);
     }
 
-    public ProjectRepresentation getProject(Long id) {
-        return queryFactory.select(constructor(
-                ProjectRepresentation.class, project.id, project.externalId, project.createdOn, project.updatedOn))
-                .from(project)
-                .where(project.id.eq(id))
-                .fetchFirst();
+    public Optional<ProjectRepresentation> getProject(Long id) {
+        return Optional.ofNullable(
+                queryFactory.select(
+                        constructor(
+                                ProjectRepresentation.class,
+                                project.id,
+                                project.externalId,
+                                project.createdOn,
+                                project.updatedOn))
+                        .from(project)
+                        .where(project.id.eq(id))
+                        .fetchFirst());
     }
 
 }

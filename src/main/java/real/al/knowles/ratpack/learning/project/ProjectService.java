@@ -33,7 +33,9 @@ public class ProjectService {
 
     public Promise<ProjectRepresentation> getProject(Long id) {
         return databaseExecutor.execute(() ->
-                projectRepository.getProject(id));
+                projectRepository.getProject(id)
+                        .orElseThrow(() ->
+                                new ProjectException(String.format("No project with ID: %d", id))));
     }
 
 }

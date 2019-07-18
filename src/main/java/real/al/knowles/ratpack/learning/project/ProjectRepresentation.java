@@ -22,6 +22,7 @@ public class ProjectRepresentation {
 
     private LocalDateTime updatedOn;
 
+    @SuppressWarnings("unused")
     public ProjectRepresentation(Long id, String externalId, Timestamp createdOn, Timestamp updatedOn) {
         this.id = id;
         this.externalId = externalId;
