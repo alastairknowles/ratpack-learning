@@ -1,18 +1,18 @@
 package real.al.knowles.ratpack.learning.project;
 
-import com.querydsl.core.Tuple;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import real.al.knowles.ratpack.learning.AbstractRepresentation;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class ProjectRepresentation extends AbstractRepresentation<ProjectRepresentation> {
+public class ProjectRepresentation {
 
     private Long id;
 
@@ -22,13 +22,11 @@ public class ProjectRepresentation extends AbstractRepresentation<ProjectReprese
 
     private LocalDateTime updatedOn;
 
-    @Override
-    public ProjectRepresentation fromRow(Tuple row) {
-        Long id = row.get(0, Long.class);
-        String externalId = row.get(1, String.class);
-        LocalDateTime createdOn = row.get(2, LocalDateTime.class);
-        LocalDateTime updatedOn = row.get(3, LocalDateTime.class);
-        return new ProjectRepresentation(id, externalId, createdOn, updatedOn);
+    public ProjectRepresentation(Long id, String externalId, Timestamp createdOn, Timestamp updatedOn) {
+        this.id = id;
+        this.externalId = externalId;
+        this.createdOn = createdOn.toLocalDateTime();
+        this.updatedOn = updatedOn.toLocalDateTime();
     }
 
 }

@@ -9,14 +9,12 @@ import com.zaxxer.hikari.HikariDataSource;
 import net.jodah.failsafe.RetryPolicy;
 import ratpack.exec.Promise;
 import ratpack.guice.ConfigurableModule;
+import ratpack.jdbctx.Transaction;
 
-import javax.inject.Provider;
 import javax.sql.DataSource;
-import java.sql.Connection;
 
 import static java.time.Duration.ofMillis;
 import static java.time.Duration.ofSeconds;
-import static ratpack.jdbctx.Transaction.connection;
 
 public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
 
@@ -34,7 +32,7 @@ public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
         dataSource.setUsername(databaseProperties.getUser());
         dataSource.setPassword(databaseProperties.getPassword());
         dataSource.setAutoCommit(false);
-        return dataSource;
+        return Transaction.dataSource(dataSource);
     }
 
     @Provides
@@ -51,20 +49,16 @@ public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
 
     @Provides
     @Singleton
-    public TransactionWrapper transactionWrapper(DataSource dataSource, RetryPolicy<Promise> retryPolicy) {
-        return new TransactionWrapper(dataSource, retryPolicy);
+    public DatabaseExecutor databaseExecutor(DataSource dataSource, RetryPolicy<Promise> retryPolicy) {
+        return new DatabaseExecutor(dataSource, retryPolicy);
     }
 
     @Provides
     @Singleton
-    public SQLQueryFactory queryFactory() {
+    public SQLQueryFactory queryFactory(DataSource dataSource) {
         Configuration configuration = new Configuration(MySQLTemplates.DEFAULT);
-        return new SQLQueryFactory(configuration, connectionProvider());
-    }
-
-    private Provider<Connection> connectionProvider() {
-        return () -> connection()
-                .orElseThrow(() -> new DatabaseException("No active transaction"));
+        return new SQLQueryFactory(configuration, dataSource);
     }
 
 }
+

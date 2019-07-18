@@ -1,10 +1,10 @@
 package real.al.knowles.ratpack.learning;
 
 import ratpack.config.ConfigData;
-import real.al.knowles.ratpack.learning.blocking.BlockingChain;
+import ratpack.func.Action;
 import real.al.knowles.ratpack.learning.database.DatabaseModule;
-import real.al.knowles.ratpack.learning.helloworld.HelloWorldChain;
-import real.al.knowles.ratpack.learning.nonblocking.NonBlockingChain;
+import real.al.knowles.ratpack.learning.database.DatabaseProperties;
+import real.al.knowles.ratpack.learning.jackson.JacksonModule;
 import real.al.knowles.ratpack.learning.project.ProjectChain;
 import real.al.knowles.ratpack.learning.project.ProjectModule;
 
@@ -20,16 +20,15 @@ public class Main {
                         .props(Main.class.getResource("/db/database.properties"))
                         .build();
 
+        Action<DatabaseProperties> databaseProperties = loadDatabaseProperties(configData);
+
         start(server -> server
                 .registry(registry(binding -> binding
-                        .module(Configuration.class)
-                        .module(DatabaseModule.class, loadDatabaseProperties(configData))
+                        .module(JacksonModule.class)
+                        .module(DatabaseModule.class, databaseProperties)
                         .module(ProjectModule.class)))
                 .handlers(chain -> chain
                         .get(context -> context.render("homepage"))
-                        .insert(BlockingChain.class)
-                        .insert(NonBlockingChain.class)
-                        .insert(HelloWorldChain.class)
                         .prefix("project", ProjectChain.class)));
     }
 

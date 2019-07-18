@@ -3,8 +3,9 @@ package real.al.knowles.ratpack.learning.project;
 import com.google.inject.Inject;
 import ratpack.func.Action;
 import ratpack.handling.Chain;
+import ratpack.jackson.Jackson;
 
-import static ratpack.jackson.Jackson.json;
+import static real.al.knowles.ratpack.learning.chain.ChainUtils.pathTokenAsLong;
 
 public class ProjectChain implements Action<Chain> {
 
@@ -20,7 +21,14 @@ public class ProjectChain implements Action<Chain> {
         chain.post(context ->
                 context.parse(ProjectRepresentation.class)
                         .flatMap(projectService::createProject)
-                        .then(projectRepresentation -> context.render(json(projectRepresentation))));
+                        .map(Jackson::json)
+                        .then(context::render))
+                .get(":id", context -> {
+                    Long id = pathTokenAsLong(context, "id");
+                    projectService.getProject(id)
+                            .map(Jackson::json)
+                            .then(context::render);
+                });
     }
 
 }
