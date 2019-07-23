@@ -32,6 +32,7 @@ public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
         dataSource.setUsername(databaseProperties.getUser());
         dataSource.setPassword(databaseProperties.getPassword());
         dataSource.setAutoCommit(false);
+        dataSource.setReadOnly(true);
         return Transaction.dataSource(dataSource);
     }
 
