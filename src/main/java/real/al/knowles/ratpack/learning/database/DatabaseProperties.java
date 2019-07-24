@@ -19,9 +19,7 @@ public class DatabaseProperties {
 
     private Integer retryCount;
 
-    private Long retryIntervalSeconds;
-
-    private Long retryJitterMillis;
+    private Integer retryBaseMillis;
 
     public static Action<DatabaseProperties> loadDatabaseProperties(ConfigData configData) {
         return databaseProperties -> {
@@ -30,9 +28,7 @@ public class DatabaseProperties {
             databaseProperties.setUser(configData.get("/database/user", String.class));
             databaseProperties.setPassword(configData.get("/database/password", String.class));
             databaseProperties.setRetryCount(configData.get("/database/retryCount", Integer.class));
-            databaseProperties.setRetryIntervalSeconds(
-                    configData.get("/database/retryIntervalSeconds", Long.class));
-            databaseProperties.setRetryJitterMillis(configData.get("/database/retryJitterMillis", Long.class));
+            databaseProperties.setRetryBaseMillis(configData.get("/database/retryBaseMillis", Integer.class));
         };
     }
 
