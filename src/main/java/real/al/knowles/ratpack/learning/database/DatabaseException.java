@@ -3,12 +3,13 @@ package real.al.knowles.ratpack.learning.database;
 import com.google.common.collect.ImmutableList;
 import com.querydsl.core.QueryException;
 import lombok.Getter;
+import real.al.knowles.ratpack.learning.retry.RetryableException;
 
 import java.sql.SQLException;
 import java.util.List;
 
 @Getter
-public class DatabaseException extends RuntimeException {
+public class DatabaseException extends RetryableException {
 
     private static final List<Integer> retryableSqlErrorCodes =
             ImmutableList.of(1205, 1213);

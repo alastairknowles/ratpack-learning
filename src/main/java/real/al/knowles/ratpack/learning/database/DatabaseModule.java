@@ -8,6 +8,7 @@ import com.querydsl.sql.SQLQueryFactory;
 import com.zaxxer.hikari.HikariDataSource;
 import ratpack.guice.ConfigurableModule;
 import ratpack.jdbctx.Transaction;
+import real.al.knowles.ratpack.learning.retry.RetryEvaluator;
 
 import javax.sql.DataSource;
 
@@ -33,10 +34,11 @@ public class DatabaseModule extends ConfigurableModule<DatabaseProperties> {
 
     @Provides
     @Singleton
-    public DatabaseExecutor databaseExecutor(DatabaseProperties databaseProperties, DataSource dataSource) {
+    public DatabaseExecutor databaseExecutor(DatabaseProperties databaseProperties, DataSource dataSource,
+                                             RetryEvaluator retryEvaluator) {
         int retryCount = databaseProperties.getRetryCount();
         int retryIntervalMillis = databaseProperties.getRetryBaseMillis();
-        return new DatabaseExecutor(retryCount, retryIntervalMillis, dataSource);
+        return new DatabaseExecutor(retryCount, retryIntervalMillis, dataSource, retryEvaluator);
     }
 
     @Provides

@@ -6,14 +6,13 @@ import ratpack.exec.Promise;
 import ratpack.func.Block;
 import ratpack.func.Factory;
 import ratpack.jdbctx.Transaction;
+import real.al.knowles.ratpack.learning.retry.RetryEvaluator;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
-
-import static com.google.common.math.IntMath.pow;
 
 public class DatabaseExecutor {
 
@@ -23,11 +22,14 @@ public class DatabaseExecutor {
 
     private final DataSource dataSource;
 
+    private final RetryEvaluator retryEvaluator;
+
     @Inject
-    public DatabaseExecutor(int retryCount, int retryBaseMillis, DataSource dataSource) {
+    public DatabaseExecutor(int retryCount, int retryBaseMillis, DataSource dataSource, RetryEvaluator retryEvaluator) {
         this.retryCount = retryCount;
         this.retryBaseMillis = retryBaseMillis;
         this.dataSource = dataSource;
+        this.retryEvaluator = retryEvaluator;
     }
 
     public <T> Promise<T> execute(Factory<T> work) {
@@ -76,15 +78,10 @@ public class DatabaseExecutor {
         });
     }
 
-    private Promise<Duration> configureRetry(int retryBaseMillis, Integer attempt, Throwable throwable) {
-        DatabaseException exception = new DatabaseException(throwable);
-        if (exception.isRetryable()) {
-            int retryInterval = retryBaseMillis * pow(attempt, 2);
-            int retryIntervalWithJitter = ThreadLocalRandom.current().nextInt(retryInterval);
-            return Promise.value(Duration.ofMillis(retryIntervalWithJitter));
-        }
-
-        throw exception;
+    private Promise<Duration> configureRetry(int retryBaseMillis, Integer attempt, Throwable error) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        DatabaseException wrappedError = new DatabaseException(error);
+        return retryEvaluator.withFullJitter(retryBaseMillis, attempt, random, wrappedError);
     }
 
 }
