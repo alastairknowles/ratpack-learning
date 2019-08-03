@@ -18,7 +18,7 @@ public class ProjectService {
         this.databaseExecutor = databaseExecutor;
     }
 
-    public Promise<ProjectRepresentation> createProject(ProjectRepresentation projectRepresentation) {
+    Promise<ProjectRepresentation> createProject(ProjectRepresentation projectRepresentation) {
         LocalDateTime now = LocalDateTime.now();
         projectRepresentation.setCreatedOn(now);
         projectRepresentation.setUpdatedOn(now);
@@ -31,7 +31,7 @@ public class ProjectService {
                 });
     }
 
-    public Promise<ProjectRepresentation> getProject(Long id) {
+    Promise<ProjectRepresentation> getProject(Long id) {
         return databaseExecutor.execute(() ->
                 projectRepository.getProject(id)
                         .orElseThrow(() ->

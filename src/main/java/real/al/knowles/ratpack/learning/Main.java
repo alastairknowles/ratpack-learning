@@ -7,7 +7,6 @@ import real.al.knowles.ratpack.learning.database.DatabaseProperties;
 import real.al.knowles.ratpack.learning.jackson.JacksonModule;
 import real.al.knowles.ratpack.learning.project.ProjectChain;
 import real.al.knowles.ratpack.learning.project.ProjectModule;
-import real.al.knowles.ratpack.learning.retry.RetryModule;
 
 import static ratpack.guice.Guice.registry;
 import static ratpack.server.RatpackServer.start;
@@ -26,7 +25,6 @@ public class Main {
         start(server -> server
                 .registry(registry(binding -> binding
                         .module(JacksonModule.class)
-                        .module(RetryModule.class)
                         .module(DatabaseModule.class, databaseProperties)
                         .module(ProjectModule.class)))
                 .handlers(chain -> chain

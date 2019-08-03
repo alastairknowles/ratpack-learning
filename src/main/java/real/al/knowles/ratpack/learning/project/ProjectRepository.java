@@ -19,7 +19,7 @@ public class ProjectRepository {
         this.queryFactory = queryFactory;
     }
 
-    public Long createProject(ProjectRepresentation projectRepresentation) {
+    Long createProject(ProjectRepresentation projectRepresentation) {
         SQLInsertClause insert = queryFactory.insert(project);
         insert.set(project.externalId, projectRepresentation.getExternalId());
         insert.set(project.createdOn, Timestamp.valueOf(projectRepresentation.getCreatedOn()));
@@ -27,7 +27,7 @@ public class ProjectRepository {
         return insert.executeWithKey(project.id);
     }
 
-    public Optional<ProjectRepresentation> getProject(Long id) {
+    Optional<ProjectRepresentation> getProject(Long id) {
         return Optional.ofNullable(
                 queryFactory.select(
                         constructor(

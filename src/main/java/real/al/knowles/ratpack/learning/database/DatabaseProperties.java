@@ -9,24 +9,15 @@ import ratpack.func.Action;
 @Setter
 public class DatabaseProperties {
 
-    private String driver;
-
     private String url;
 
-    private String user;
+    private int retryCount;
 
-    private String password;
-
-    private Integer retryCount;
-
-    private Integer retryBaseMillis;
+    private int retryBaseMillis;
 
     public static Action<DatabaseProperties> loadDatabaseProperties(ConfigData configData) {
         return databaseProperties -> {
-            databaseProperties.setDriver(configData.get("/database/driver", String.class));
             databaseProperties.setUrl(configData.get("/database/url", String.class));
-            databaseProperties.setUser(configData.get("/database/user", String.class));
-            databaseProperties.setPassword(configData.get("/database/password", String.class));
             databaseProperties.setRetryCount(configData.get("/database/retryCount", Integer.class));
             databaseProperties.setRetryBaseMillis(configData.get("/database/retryBaseMillis", Integer.class));
         };

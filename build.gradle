@@ -1,13 +1,14 @@
-import com.mysql.cj.jdbc.MysqlDataSource
 import com.querydsl.sql.MySQLTemplates
 import com.querydsl.sql.codegen.MetaDataExporter
 
 import java.sql.Connection
 
+import org.mariadb.jdbc.MariaDbDataSource
+
 
 buildscript {
     dependencies {
-        classpath group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
+        classpath group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.4.3'
         classpath group: 'com.querydsl', name: 'querydsl-sql-codegen', version: '4.2.1'
         classpath group: 'com.querydsl', name: 'querydsl-sql', version: '4.2.1'
     }
@@ -44,8 +45,9 @@ dependencies {
     compile group: 'io.ratpack', name: 'ratpack-core', version: '1.6.1'
     compile group: 'io.ratpack', name: 'ratpack-guice', version: '1.6.1'
     compile group: 'io.ratpack', name: 'ratpack-jdbc-tx', version: '1.6.1'
+    compile group: 'io.ratpack', name: 'ratpack-dropwizard-metrics', version: '1.6.1'
     compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.26'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.16'
+    compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.4.3'
     compile group: 'com.querydsl', name: 'querydsl-sql', version: '4.2.1'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.3.1'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
@@ -90,12 +92,7 @@ task queryDsl() {
         MetaDataExporter exporter = new MetaDataExporter()
         Class.forName(databaseDriver).newInstance()
 
-        MysqlDataSource dataSource = new MysqlDataSource()
-        dataSource.setUrl(databaseUrl)
-        dataSource.setDatabaseName(databaseName)
-        dataSource.setUser(databaseUser)
-        dataSource.setPassword(databasePassword)
-
+        MariaDbDataSource dataSource = new MariaDbDataSource(databaseUrl)
         dataSource.connection.with {
             Connection connection ->
                 //noinspection GroovyAssignabilityCheck

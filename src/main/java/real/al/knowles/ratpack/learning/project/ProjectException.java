@@ -1,8 +1,8 @@
 package real.al.knowles.ratpack.learning.project;
 
-public class ProjectException extends RuntimeException {
+class ProjectException extends RuntimeException {
 
-    public ProjectException(String message) {
+    ProjectException(String message) {
         super(message);
     }
 
