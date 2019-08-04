@@ -79,7 +79,7 @@ public class QFlywaySchemaHistory extends com.querydsl.sql.RelationalPathBase<QF
         addMetadata(installedOn, ColumnMetadata.named("installed_on").withIndex(8).ofType(Types.TIMESTAMP).withSize(19).notNull());
         addMetadata(installedRank, ColumnMetadata.named("installed_rank").withIndex(1).ofType(Types.INTEGER).withSize(10).notNull());
         addMetadata(script, ColumnMetadata.named("script").withIndex(5).ofType(Types.VARCHAR).withSize(1000).notNull());
-        addMetadata(success, ColumnMetadata.named("success").withIndex(10).ofType(Types.BIT).withSize(1).notNull());
+        addMetadata(success, ColumnMetadata.named("success").withIndex(10).ofType(Types.BIT).withSize(3).notNull());
         addMetadata(type, ColumnMetadata.named("type").withIndex(4).ofType(Types.VARCHAR).withSize(20).notNull());
         addMetadata(version, ColumnMetadata.named("version").withIndex(2).ofType(Types.VARCHAR).withSize(50));
     }

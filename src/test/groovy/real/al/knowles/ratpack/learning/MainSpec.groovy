@@ -17,7 +17,12 @@ class MainSpec extends Specification {
     @Test
     def 'homepage'() {
         when: 'home page is requested'
-        String response = applicationUnderTest.httpClient.get().getBody().getText(UTF_8)
+        String response =
+                applicationUnderTest
+                        .httpClient
+                        .get()
+                        .getBody()
+                        .getText(UTF_8)
 
         then: 'Home page message is returned'
         response == 'homepage'
